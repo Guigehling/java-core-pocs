@@ -2,7 +2,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class Main {
+public class ReflectionApiApp {
 
     public static void main(String[] args) {
         Person person = new Person("Guilherme", "guilherme@test.com", 200);
