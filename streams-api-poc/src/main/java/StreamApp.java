@@ -1,7 +1,7 @@
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
+import java.util.function.*;
 import java.util.stream.Collectors;
 
 public class StreamApp {
@@ -66,6 +66,42 @@ public class StreamApp {
         System.out.println("--- GROUPED BY CATEGORY ---");
         groupedByCategory
                 .forEach((category, items) -> System.out.println(category + " -> " + items));
+
+        // =========================================
+        // SUPPLIER
+        // =========================================
+        Supplier<Product> defaultProduct = () -> new Product("Default Product",
+                0.0,
+                "Undefined");
+
+        System.out.println("--- SUPPLIER ---");
+        System.out.println(defaultProduct.get());
+
+        // =========================================
+        // CONSUMER
+        // =========================================
+        Consumer<Product> printProduct = product -> System.out.println(product.name() + " - $" + product.price());
+
+        System.out.println("--- CONSUMER ---");
+        products.forEach(printProduct);
+
+        // =========================================
+        // UNARY_OPERATOR
+        // =========================================
+        UnaryOperator<Double> applyDiscount = value -> value * 0.9;
+
+        System.out.println("--- UNARY OPERATOR ---");
+        System.out.println(applyDiscount.apply(100.0));
+
+        // =========================================
+        // BINARY_OPERATOR
+        // =========================================
+        BinaryOperator<Double> sumPrices = Double::sum;
+
+        System.out.println("--- BINARY OPERATOR ---");
+        System.out.println(products.stream()
+                .map(Product::price)
+                .reduce(0.0, sumPrices));
     }
 
 }
