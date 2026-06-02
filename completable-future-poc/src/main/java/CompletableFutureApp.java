@@ -1,4 +1,5 @@
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class CompletableFutureApp {
@@ -8,12 +9,16 @@ public class CompletableFutureApp {
         // =========================================
         // RUN ASYNC
         // =========================================
-        CompletableFuture<Void> runAsync = CompletableFuture.runAsync(() ->
-                System.out.println("Running async task...")
-        );
+        try {
 
-        runAsync.join();
+            CompletableFuture<Void> runAsync = CompletableFuture.runAsync(() ->
+                    System.out.println("Running async task...")
+            );
 
+            runAsync.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
 
         // =========================================
         // SUPPLY ASYNC
