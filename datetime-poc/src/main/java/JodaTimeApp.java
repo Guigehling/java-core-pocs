@@ -1,19 +1,19 @@
+import org.joda.time.*;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
-
-import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
-public class DateTimeApp {
+
+public class JodaTimeApp {
 
     public static void main(String[] args) {
 
         // =========================================
         // CURRENT DATE
         // =========================================
-        LocalDate today = LocalDate.now();
-        System.out.println("Today: " + today);
+        DateTime now = DateTime.now();
+        System.out.println("Today: " + now);
 
         // =========================================
         // CURRENT TIME
@@ -30,84 +30,70 @@ public class DateTimeApp {
         // =========================================
         // FORMAT
         // =========================================
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        System.out.println("Formatted: " + formatter.format(dateTime));
-        System.out.println("Formatted: " + dateTime.format(formatter));
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
+        System.out.println("Formatted: " + formatter.print(dateTime));
 
         // =========================================
         // PARSE
         // =========================================
-        System.out.println("Parsed: " + LocalDate.parse("2022-02-20"));
-
-        //FIX-ME - Erro
-        //System.out.println("Parsed/Formatted: " + LocalDate.parse("2022-02-20", formatter));
+        System.out.println("Parsed: " + DateTime.parse("2022-02-20"));
 
         // =========================================
         // PLUS
         // =========================================
-        System.out.println("Plus 10 Days: " + today.plusDays(10));
+        System.out.println("Plus 10 Days: " + dateTime.plusDays(10));
+        System.out.println("Plus 2 Months: " + dateTime.plusMonths(2));
 
         // =========================================
         // MINUS
         // =========================================
-        System.out.println("Minuis 2 Days: " + today.minusDays(2));
+        System.out.println("Minuis 2 Months: " + dateTime.minusMonths(2));
 
         // =========================================
         // PERIOD
         // =========================================
-        Period period = Period.between(
-                LocalDate.of(2025, 9, 10),
-                today
-        );
+        Period period = new Period(DateTime.parse("2023-04-05"), DateTime.now());
 
         System.out.println("Years: " + period.getYears());
 
         // =========================================
         // DURATION
         // =========================================
-        Duration duration = Duration.between(
-                LocalTime.of(8, 0),
-                LocalTime.now()
-        );
+        Hours duration = Hours.hoursBetween(new LocalTime(8, 0), LocalTime.now());
 
-        System.out.println("Duration: " + duration.toHours());
+        System.out.println("Duration: " + duration.getHours());
 
         // =========================================
         // CHRONOUNIT
         // =========================================
-        LocalDateTime start = LocalDateTime.of(2026, 6, 1, 8, 30);
-        LocalDateTime end = LocalDateTime.of(2026, 6, 2, 10, 45);
+        LocalDateTime start = new LocalDateTime(2026, 6, 1, 8, 30);
+        LocalDateTime end = new LocalDateTime(2026, 6, 2, 10, 45);
 
         System.out.println("ChronoUnit:");
-        System.out.println("-- Hours   : " + ChronoUnit.HOURS.between(start, end));
-        System.out.println("-- Minutes : " + ChronoUnit.MINUTES.between(start, end));
-        System.out.println("-- Days    : " + ChronoUnit.DAYS.between(start, end));
-        System.out.println("-- Months  : " + ChronoUnit.MONTHS.between(start, end));
-        System.out.println("-- Years   : " + ChronoUnit.YEARS.between(start, end));
+        System.out.println("-- Hours   : " + Hours.hoursBetween(start, end).getHours());
+        System.out.println("-- Minutes : " + Minutes.minutesBetween(start, end).getMinutes());
+        System.out.println("-- Days    : " + Days.daysBetween(start, end).getDays());
+        System.out.println("-- Months  : " + Months.monthsBetween(start, end).getMonths());
+        System.out.println("-- Years   : " + Years.yearsBetween(start, end).getYears());
 
         // =========================================
         // ZONE
         // =========================================
-        ZonedDateTime zoned = ZonedDateTime.now(
-                ZoneId.of("America/Sao_Paulo")
-        );
+        DateTimeZone zoned = DateTimeZone.forID("America/Sao_Paulo");
 
-        System.out.println("Zone: " + zoned);
+        System.out.println("Zone: " + new DateTime(zoned));
 
         // =========================================
         // TIME ZONES (ZONEID)
         // =========================================
-        ZonedDateTime saoPauloTime = ZonedDateTime.now(
-                ZoneId.of("America/Sao_Paulo")
-        );
+        DateTimeZone zoneSaoPaulo = DateTimeZone.forID("America/Sao_Paulo");
+        DateTimeZone zoneNewYork = DateTimeZone.forID("America/New_York");
+        DateTimeZone zoneTokyo = DateTimeZone.forID("Asia/Tokyo");
 
-        ZonedDateTime newYorkTime = saoPauloTime.withZoneSameInstant(
-                ZoneId.of("America/New_York")
-        );
+        DateTime saoPauloTime = new DateTime(zoneSaoPaulo);
 
-        ZonedDateTime tokyoTime = saoPauloTime.withZoneSameInstant(
-                ZoneId.of("Asia/Tokyo")
-        );
+        DateTime newYorkTime = saoPauloTime.withZone(zoneNewYork);
+        DateTime tokyoTime = saoPauloTime.withZone(zoneTokyo);
 
         System.out.println("Zones:");
         System.out.println("-- São Paulo : " + saoPauloTime);
@@ -118,11 +104,7 @@ public class DateTimeApp {
         // java.util.Date -> LocalDateTime
         // =========================================
         Date legacyDate = new Date();
-
-        LocalDateTime localDateTime = LocalDateTime.ofInstant(
-                legacyDate.toInstant(),
-                ZoneId.systemDefault()
-        );
+        LocalDateTime localDateTime = new LocalDateTime(legacyDate);
 
         System.out.println("Legacy Date: " + legacyDate);
         System.out.println("LocalDateTime: " + localDateTime);
@@ -130,33 +112,21 @@ public class DateTimeApp {
         // =========================================
         // LocalDateTime -> java.util.Date
         // =========================================
-        Date convertedDate = Date.from(localDateTime
-                .atZone(ZoneId.systemDefault())
-                .toInstant()
-        );
+        Date convertedDate = localDateTime.toDate();
 
         System.out.println("Converted Date: " + convertedDate);
 
         // =========================================
         // LOCALDATETIME -> INSTANT
         // =========================================
-        Instant instant = LocalDateTime.now()
-                .atZone(ZoneId.systemDefault())
-                .toInstant();
-
-        System.out.println("Convertd to Instant: " + instant);
+        Instant instant = LocalDateTime.now().toDateTime().toInstant();
+        System.out.println("Converted to Instant: " + instant);
 
         // =========================================
         // INSTANT -> LOCALDATETIME
         // =========================================
-        LocalDateTime convertedBack = LocalDateTime.ofInstant(
-                instant,
-                ZoneId.systemDefault()
-        );
-
+        LocalDateTime convertedBack = new LocalDateTime(instant, DateTimeZone.getDefault());
         System.out.println("Converted Back: " + convertedBack);
-
     }
 
 }
-
