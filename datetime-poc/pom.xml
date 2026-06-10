@@ -4,8 +4,8 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.poc.easyrandom</groupId>
-    <artifactId>easy-random-poc</artifactId>
+    <groupId>com.poc.datetime</groupId>
+    <artifactId>date-time-poc</artifactId>
     <version>1.0.0</version>
 
     <properties>
@@ -16,17 +16,17 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- VERSIONS -->
-        <easy-random-core>5.0.0</easy-random-core>
+        <joda-time.version>2.14.2</joda-time.version>
 
     </properties>
 
     <dependencies>
 
-        <!-- EASY-RANDOM -->
+        <!-- JODA-TIME -->
         <dependency>
-            <groupId>org.jeasy</groupId>
-            <artifactId>easy-random-core</artifactId>
-            <version>${easy-random-core}</version>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>${joda-time.version}</version>
         </dependency>
 
     </dependencies>
