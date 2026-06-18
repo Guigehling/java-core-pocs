@@ -2,6 +2,6 @@ package behavioral.strategy;
 
 public interface PaymentStrategy {
 
-    void pay(double value);
+    void pay(double amount);
 
 }
